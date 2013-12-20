@@ -13,7 +13,7 @@ if( $headers["x-trello-webhook"]) {
 		if(preg_match($safeDomain, $email)) {
 			$to = $_GET['email'];
 		} else {
-			$to = "wadewachs+fail@gmail.com";
+			$to = "wwachs@liquidweb.com";
 			$message .= "email from bad domain - $email\r\n";
 			$message .= "email from bad domain - $email\r\n";
 			$message .= "email from bad domain - $email\r\n";
@@ -36,7 +36,7 @@ if( $headers["x-trello-webhook"]) {
 	$message .= "Updated By - " . $action['action']['memberCreator']['fullName'] . "\r\n";
 	$message .= "Updated On - " . $action['action']['date'] . "\r\n\r\n";
 	$message .= "Link to Trello - " . $action['model']['url'] . "\r\n";
-	$message .= "Link to read-only mode - http://trello.wadewachs.com/?c=" . $action['model']['id'] . "\r\n\r\n";
+	$message .= "Link to read-only mode - http://trello.liquidweb.com/?c=" . $action['model']['id'] . "\r\n\r\n";
 	$message .= "Details of the change are listed below:\r\n";
 
 	

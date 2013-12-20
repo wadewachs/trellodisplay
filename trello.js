@@ -8,16 +8,24 @@ var onAuthorize = function() {
 
 	buildHeader();
 	
-	if (!$_GET["c"] & !$_GET["b"]) {
+	if (!$_GET["s"] & !$_GET["c"] & !$_GET["b"] & !$_GET["deletewebhookid"]) {
 		listBoards();
 	}
 	
+	if ($_GET["s"]) {
+		$('<span>The search feature is coming soon!</span>').appendTo('#output');	
+	}
+
 	if ($_GET["b"]) {
 		displayBoard($_GET["b"]);
 	}
 
 	if ($_GET["c"]) {
 		displayCard($_GET["c"]);
+	}
+	
+	if ($_GET["deletewebhookid"]) {
+		unsubscribe($_GET["deletewebhookid"]);
 	}
 	
 
@@ -28,25 +36,29 @@ var buildHeader = function() {
 		$("#fullName").text(member.fullName);
 	});
 
+	$('<div id="formBar" style="clear:both"></div>').appendTo('#header');
 	
-	var $quickCard = $('<form method="get"><input type="text" name="c" placeholder="Card ID" /><input type="submit" value="Go"/></form>')
-	.appendTo("#header");
+	$('<div id="quickCard"><form method="get"><input type="text" name="c" placeholder="Card ID" /><input type="submit" value="Go"/></form></div>')
+	.appendTo("#formBar");
 
+	$('<div id="quickSearch"><form method="get"><input type="text" name="s" placeholder="Search" /><input type="submit" value="Search"/></form></div>')
+	.appendTo("#formBar");
 
+	$('<div style="clear:both"></div>').appendTo('#header');
 
 };
 
 var addSubscribeLink = function(modelId, desc) {
 	$('<input id="emailId" type="text" placeholder="e-mail address"/>')
-	.appendTo("#header");
+	.appendTo("#formBar");
 	
 	$('<input type="button" value="Subscribe" />')
 	.click(function() {subscribe(modelId, desc, $("#emailId").val())})
-	.appendTo("#header");
+	.appendTo("#formBar");
 };
 
 var subscribe = function(model, desc, email) {
-	var $description = "webhook to notify " + email + "about changes to " + model + " - Desc - " + desc;
+	var $description = "webhook to notify " + email + " about changes to " + model + " - Desc - " + desc;
 	var $callback = "https://trello.liquidweb.com/updater/?email=" + email + "&model=" + model;
 	console.log($description);
 	console.log($callback);
@@ -55,6 +67,23 @@ var subscribe = function(model, desc, email) {
 	function() {alert("Notification added successfully");},
 	function() {alert("FAIL - The notification failed to create!!!!!");}); 
 };
+
+var unsubscribe = function(hookId) {
+	//This is currently totally broken due to cross site scripting permission stuff, I get an error everytime this code runs.  moving on for now
+
+	$("<span>Attempting to delete webhook</span><br />").appendTo("#output");
+
+	Trello.get("webhooks/" + hookId + "/",  
+		function(hook) { 
+			$("<span>" + hook.description + " - has been found, attempting to delete</span><br />").appendTo("#output");
+			Trello.del("webhooks/" + hookId + "/",
+				function(hook) { $("<span>Webhook successfully deleted!</span>").appendTo("#output"); },
+				function(hook) { $("<span>WEbhook was found, but it failed to delete.  Retry, and notify someone if this continues</span>").appendTo("#output"); } );  
+
+		 },
+		function(hook) { $("#output").empty(); $("<span>Unable to locate a webhook by that ID to delete - " + hookId + "</span>").appendTo("#output"); } );
+};
+
 
 var displayBoard = function(boardId) {
 	var $cards = $("<div>")
@@ -66,13 +95,13 @@ var displayBoard = function(boardId) {
 	Trello.boards.get(boardId,{cards:"visible", lists:"all" }, function(board) {
 		//console.log(lists);
 		addSubscribeLink(boardId, "Board Name - " + board.name);
-		displayResults(board);
+		displayCards(board);
 	});
 };
 
 
 
-var displayResults = function(board) {
+var displayCards = function(board) {
 	$("#output").empty();
 	$('#output').append("<h1>" + board.name  + "</h1>");
 	$('#output').append("<thead><tr><th>Card Title</th><th>List (Status)</th><th>Date Updated</th></tr></thead>");
@@ -137,7 +166,7 @@ var displayCard = function(cardId) {
 	Trello.cards.get(cardId,{board:"true",list:"true",checklists: "all",actions: "commentCard,createCard", action_memberCreator_fields : "fullName"}, function(cards) {
 		$details.empty()
 		
-		addSubscribeLink(cardId, "Card Title - " + cards.name);
+		addSubscribeLink(cards.id, "Card Title - " + cards.name);
 
 		var $detailHeader = $("<div>")
 		.addClass("cardDetailHeader")
@@ -146,6 +175,15 @@ var displayCard = function(cardId) {
 		$("<h1>")
 		.text(cards.name)
 		.attr("id", "cardTitle")
+		.appendTo($detailHeader);
+
+		$("<a>")
+		.text(cards.name)
+		.attr("href", "http://www.trello.com/c/" + cards.id)
+		.text("Open card in Trello")
+		.appendTo($detailHeader);
+
+		$('<br /><br />')
 		.appendTo($detailHeader);
 
 		$("<a>")

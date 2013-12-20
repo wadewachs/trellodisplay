@@ -18,6 +18,18 @@ body {
     background: #eee;
 }
 
+#quickCard {
+	display:block;
+	width: 250px;
+	float: right;
+}
+
+#quickSearch {
+	display:block;
+	width: 250px;
+	float:right;
+}
+
 #output {
     padding: 4px;
 	width:90%;
