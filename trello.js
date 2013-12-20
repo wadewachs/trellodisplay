@@ -13,7 +13,7 @@ var onAuthorize = function() {
 	}
 	
 	if ($_GET["s"]) {
-		$('<span>The search feature is coming soon!</span>').appendTo('#output');	
+		displaySearch($_GET["s"]);
 	}
 
 	if ($_GET["b"]) {
@@ -84,6 +84,17 @@ var unsubscribe = function(hookId) {
 		function(hook) { $("#output").empty(); $("<span>Unable to locate a webhook by that ID to delete - " + hookId + "</span>").appendTo("#output"); } );
 };
 
+var displaySearch = function(query) {
+	var $cards = $("<div>")
+	.text("Loading Cards...")
+	.addClass("cards")
+	.appendTo("#output");
+
+	
+	Trello.get("search/",{query:query, boards_limit:"1000", cards_limit:"1000", card_list:"true", card_board:"true", partial:"true"}, function(results) {
+		displayResults(results);
+	});
+};
 
 var displayBoard = function(boardId) {
 	var $cards = $("<div>")
@@ -99,6 +110,26 @@ var displayBoard = function(boardId) {
 	});
 };
 
+
+var displayResults = function(results) {
+	$("#output").empty();
+	$('#output').append("<h1>Search Results</h1>");
+	$('#output').append("<thead><tr><th>Card Title</th><th style='width:60%; overflow:hidden;'>Description</th><th>Board</th><th>List (Status)</th><th>Date Updated</th></tr></thead>");
+
+	var cardCount = results.cards.length;
+	for (var i=0; i<cardCount; i++) {
+		//console.log(results.cards[i]);
+		var c = results.cards[i];
+			var row = "<tr>";
+			row = row + "<td><a href='/?c=" + c.id + "'>" + c.name + "</a></td>";
+			row = row + "<td>" + c.desc + "</td>";
+			row = row + "<td><a href='/?b=" + c.board.id + "'>" + c.board.name + "</a></td>";
+			row = row + "<td>" + c.list.name + "</td>";
+			row = row + "<td>" + c.dateLastActivity + "</td>";
+			row = row + "</tr>";
+			$('#output').append(row);
+	};
+};
 
 
 var displayCards = function(board) {
@@ -120,8 +151,8 @@ var displayCards = function(board) {
 			row = row + "<td>" + c.dateLastActivity + "</td>";
 			row = row + "</tr>";
 			$('#output').append(row);
-	}
-}
+	};
+};
 
 var displayResultsBoard = function(board) {
 	$("#output").empty();
@@ -136,8 +167,8 @@ var displayResultsBoard = function(board) {
 			row = row + "<td><a href='/?b=" + b.id + "'>" + b.name + "</a></td>";
 			row = row + "</tr>";
 			$('#output').append(row);
-	}
-}
+	};
+};
 
 
 
