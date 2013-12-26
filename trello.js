@@ -68,21 +68,6 @@ var subscribe = function(model, desc, email) {
 	function() {alert("FAIL - The notification failed to create!!!!!");}); 
 };
 
-var unsubscribe = function(hookId) {
-	//This is currently totally broken due to cross site scripting permission stuff, I get an error everytime this code runs.  moving on for now
-
-	$("<span>Attempting to delete webhook</span><br />").appendTo("#output");
-
-	Trello.get("webhooks/" + hookId + "/",  
-		function(hook) { 
-			$("<span>" + hook.description + " - has been found, attempting to delete</span><br />").appendTo("#output");
-			Trello.del("webhooks/" + hookId + "/",
-				function(hook) { $("<span>Webhook successfully deleted!</span>").appendTo("#output"); },
-				function(hook) { $("<span>WEbhook was found, but it failed to delete.  Retry, and notify someone if this continues</span>").appendTo("#output"); } );  
-
-		 },
-		function(hook) { $("#output").empty(); $("<span>Unable to locate a webhook by that ID to delete - " + hookId + "</span>").appendTo("#output"); } );
-};
 
 var displaySearch = function(query) {
 	var $cards = $("<div>")

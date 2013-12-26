@@ -1,4 +1,18 @@
 <?php  
+if ( $_GET["deletethiswebhookplease"] ) {
+	$url ="https://api.trello.com/1/webhooks/" . $_GET["deletethiswebhookplease"] . "/?key=25b5b64e0775810adb63542a7b75f411&token=fc6fe9f57d3796636d24d77dd93403d81682bf500494552866c9445124eee8f1";
+
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL,$url);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$result = curl_exec($ch);
+	$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);	
+}
+
 
 $headers = getallheaders();
 
@@ -41,7 +55,7 @@ if( $headers["x-trello-webhook"]) {
 
 	
 	$message .= print_r($action['action']['data'], true);
-	#$message .= print_r($action, true);
+	$message .= "\r\n\r\n\r\nTo no longer receive updates from THIS SPECIFIC SUBSCRIPTION go to https://trello.liquidweb.com/?deletethiswebhookplease=";
 
 
 
@@ -58,8 +72,3 @@ if( $headers["x-trello-webhook"]) {
 
 }
 ?>
-
-<?php
-
-?>
-
