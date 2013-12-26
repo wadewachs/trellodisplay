@@ -218,6 +218,10 @@ var displayCard = function(cardId) {
 		.attr("id", "cardDesc")
 		.appendTo($detailHeader);
 
+		var descBrs = $('#cardDesc').html().replace(/\n/g,"<br>");
+		$('#cardDesc').html(descBrs)
+
+
 		var $checklists = $("<div>")
 		.addClass("cardChecklists")
 		.appendTo($details);
@@ -286,6 +290,9 @@ var displayCard = function(cardId) {
 				.addClass("commentText")
 				.text(action.data.text)
 				.appendTo($comment);
+				
+				var brs = $('.commentText').html().replace(/\n/g,"<br>");
+				$('.commentText').html(brs)
 			}
 		});
 
