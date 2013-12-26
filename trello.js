@@ -286,13 +286,13 @@ var displayCard = function(cardId) {
 				.text(action.date)
 				.appendTo($comment);
 
-				$("<span>")
+			 	var commentnobrs = $("<span>")
 				.addClass("commentText")
 				.text(action.data.text)
 				.appendTo($comment);
 				
-				var brs = $('.commentText').html().replace(/\n/g,"<br>");
-				$('.commentText').html(brs)
+				var brs = $(commentnobrs).html().replace(/\n/g,"<br>");
+				$(commentnobrs).html(brs)
 			}
 		});
 
