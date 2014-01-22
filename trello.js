@@ -45,12 +45,12 @@ var buildHeader = function() {
 };
 
 var addSubscribeLink = function(modelId, desc) {
-	$('<input id="emailId" type="text" placeholder="e-mail address"/>')
+	$('<div class="quickForm"><form class="form-inline"><div id="subscribeLink" class="input-group"><input id="emailId" type="email" class="form-control" placeholder="e-mail address"/></div></form></div>')
 	.appendTo("#formBar");
 	
-	$('<input type="button" value="Subscribe" />')
+	$('<span class="input-group-btn"><button class="btn btn-default">Subscribe</button></span>')
 	.click(function() {subscribe(modelId, desc, $("#emailId").val())})
-	.appendTo("#formBar");
+	.appendTo("#subscribeLink");
 };
 
 var subscribe = function(model, desc, email) {
@@ -95,20 +95,21 @@ var displayBoard = function(boardId) {
 var displayResults = function(results) {
 	$("#output").empty();
 	$('#output').append("<h1>Search Results</h1>");
-	$('#output').append("<thead><tr><th>Card Title</th><th style='width:60%; overflow:hidden;'>Description</th><th>Board</th><th>List (Status)</th><th>Date Updated</th></tr></thead>");
+	$('#output').append("<table class='table table-striped table-bordered'><thead><tr><th>Card Title</th><th>Description</th><th>Board</th><th>List (Status)</th><th>Date Updated</th></tr></thead></table>");
 
 	var cardCount = results.cards.length;
 	for (var i=0; i<cardCount; i++) {
 		//console.log(results.cards[i]);
 		var c = results.cards[i];
 			var row = "<tr>";
-			row = row + "<td><a href='/?c=" + c.id + "'>" + c.name + "</a></td>";
+			row = row + "<td class='title'><a href='/?c=" + c.id + "'>" + c.name + "</a></td>";
 			row = row + "<td>" + c.desc + "</td>";
 			row = row + "<td><a href='/?b=" + c.board.id + "'>" + c.board.name + "</a></td>";
 			row = row + "<td>" + c.list.name + "</td>";
-			row = row + "<td>" + c.dateLastActivity + "</td>";
+			var date = new Date(c.dateLastActivity);
+			row = row + "<td class='date'>" + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + "</td>";
 			row = row + "</tr>";
-			$('#output').append(row);
+			$('.table').append(row);
 	};
 };
 
@@ -116,7 +117,7 @@ var displayResults = function(results) {
 var displayCards = function(board) {
 	$("#output").empty();
 	$('#output').append("<h1>" + board.name  + "</h1>");
-	$('#output').append("<thead><tr><th>Card Title</th><th>List (Status)</th><th>Date Updated</th></tr></thead>");
+	$('#output').append("<table class='table table-striped table-bordered'><thead><tr><th>Card Title</th><th>List (Status)</th><th>Date Updated</th></tr></thead></table>");
 	var lists = [];
 	$.each(board.lists, function( ix, list) {
 		lists[list.id] = list.name;
@@ -127,11 +128,12 @@ var displayCards = function(board) {
 		//console.log(results.cards[i]);
 		var c = board.cards[i];
 			var row = "<tr>";
-			row = row + "<td><a href='/?c=" + c.id + "'>" + c.name + "</a></td>";
+			row = row + "<td class='title'><a href='/?c=" + c.id + "'>" + c.name + "</a></td>";
 			row = row + "<td>" + lists[c.idList] + "</td>";
-			row = row + "<td>" + c.dateLastActivity + "</td>";
+			var date = new Date(c.dateLastActivity);
+			row = row + "<td class='date'>" + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + "</td>";
 			row = row + "</tr>";
-			$('#output').append(row);
+			$('.table').append(row);
 	};
 };
 

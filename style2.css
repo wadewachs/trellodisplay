@@ -4,3 +4,11 @@
   float: right;
   margin: 8px 0 0 8px;
 }
+
+.title {
+  min-width: 9em;
+}
+
+.date {
+  width: 14em;
+}
