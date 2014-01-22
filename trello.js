@@ -35,16 +35,12 @@ var buildHeader = function() {
 	Trello.members.get("me", function(member){
 		$("#fullName").text(member.fullName);
 	});
-
-	$('<div id="formBar" style="clear:both"></div>').appendTo('#header');
 	
-	$('<div id="quickCard"><form method="get"><input type="text" name="c" placeholder="Card ID" /><input type="submit" value="Go"/></form></div>')
+	$('<div id="quickCard" class="quickForm"><form method="get" class="form-inline"><div class="input-group"><input type="text" name="c" class="form-control" placeholder="Card ID" /><span class="input-group-btn"><button type="submit" class="btn btn-default">Go</button></span></div></form></div>')
 	.appendTo("#formBar");
 
-	$('<div id="quickSearch"><form method="get"><input type="text" name="s" placeholder="Search" /><input type="submit" value="Search"/></form></div>')
+	$('<div id="quickSearch" class="quickForm"><form method="get" class="form-inline"><div class="input-group"><input type="text" name="s" class="form-control" placeholder="Search" /><span class="input-group-btn"><button type="submit" class="btn btn-default">Search</button></span></div></form></div>')
 	.appendTo("#formBar");
-
-	$('<div style="clear:both"></div>').appendTo('#header');
 
 };
 
@@ -142,7 +138,7 @@ var displayCards = function(board) {
 var displayResultsBoard = function(board) {
 	$("#output").empty();
 	$('#output').append("<h1>Board List</h1>");
-	$('#output').append("<thead><tr><th>Board Name</th></tr></thead>");
+	$('#output').append("<table class='table table-striped table-bordered'><thead><tr><th>Board Name</th></tr></thead></table>");
 
 	var boardCount = board.length;
 	for (var i=0; i<boardCount; i++) {
@@ -151,7 +147,7 @@ var displayResultsBoard = function(board) {
 			var row = "<tr>";
 			row = row + "<td><a href='/?b=" + b.id + "'>" + b.name + "</a></td>";
 			row = row + "</tr>";
-			$('#output').append(row);
+			$('.table').append(row);
 	};
 };
 
