@@ -191,33 +191,47 @@ var displayCard = function(cardId) {
 		.attr("id", "cardTitle")
 		.appendTo($detailHeader);
 
-		$("<a>")
-		.text(cards.name)
-		.attr("href", "http://www.trello.com/c/" + cards.id)
-		.text("Open card in Trello")
-		.appendTo($detailHeader);
 
-		$('<br /><br />')
-		.appendTo($detailHeader);
 
+		
+		$("<div>")
+		.addClass("panel").addClass("panel-default").addClass("main-panel")
+		.appendTo($detailHeader);
+		
+		$("<div>")
+		.addClass("panel-heading")
+		.appendTo(".main-panel");
+		
 		$("<a>")
 		.addClass("cardBoard")
 		.attr('href', '/?b=' + cards.board.id)
-		.text('Board - ' + cards.board.name)
-		.appendTo($detailHeader);
+		.text('Board: ' + cards.board.name)
+		.appendTo(".main-panel .panel-heading");
 
-		$("<span>")
+		$("<p>")
 		.addClass("cardList")
 		.text('List (status) - ' + cards.list.name)
-		.appendTo($detailHeader);
+		.appendTo(".main-panel .panel-heading");
+		
+		$("<a>")
+		.text(cards.name)
+		.addClass("btn").addClass("btn-primary")
+		.attr("href", "http://www.trello.com/c/" + cards.id)
+		.text("Open card in Trello")
+		.appendTo(".main-panel .panel-heading");
 
-		$("<h3>")
+		$("<div>")
 		.text(cards.desc)
 		.attr("id", "cardDesc")
-		.appendTo($detailHeader);
+		.addClass("lead").addClass('panel-body')
+		.appendTo(".main-panel");
 
 		var descBrs = $('#cardDesc').html().replace(/\n/g,"<br>");
 		$('#cardDesc').html(descBrs)
+		
+		$("<div>")
+		.addClass("panel-footer")
+		.appendTo(".main-panel");
 
 
 		var $checklists = $("<div>")
@@ -225,31 +239,36 @@ var displayCard = function(cardId) {
 		.appendTo($details);
 
 		var $comments = $("<div>")
+		.append("<h3>Comments</h3>")
 		.addClass("cardComments")
 		.appendTo($details);
 
 		$.each(cards.checklists, function (ix, checklist) {
 			var $checklist = $("<div>")
-			.addClass("checklist")
+			.addClass("checklist").addClass("panel").addClass("panel-default")
 			.appendTo($checklists);
 			
-			$("<h4>")
-			.addClass("checklistTitle")
+			$("<div>")
+			.addClass("panel-heading")
 			.text(checklist.name)
 			.appendTo($checklist);
 
-			var $items = $("<ul>")
-			.addClass("checklistItems")
+			var $items = $("<div>")
+			.addClass("checklistItems").addClass("list-group")
 			.appendTo($checklist);
 
 			$.each(checklist.checkItems, function(ix, item) {
-				var $item = $("<li>")
-				.addClass("checklistItem")
-				.text(item.name)
+				var $item = $("<div>")
+				.addClass("checklistItem").addClass('list-group-item')
+				.append("<span class='glyphicon glyphicon-unchecked'></span>")
+				.append("<span class='name'>" + item.name + "</span>")
 				.appendTo($items);
 
 				if (item.state == "complete") {
-					$item.addClass("strikethrough");
+					$item.find('.name').addClass('text-muted');
+					$item.find('.glyphicon')
+					.removeClass('glyphicon-unchecked')
+					.addClass('glyphicon-check')
 				}
 				
 			});
@@ -260,34 +279,42 @@ var displayCard = function(cardId) {
 			if (action.type == "createCard") {
 				$("<span>")
 				.addClass("cardCreator")
-				.text('Created by - ' + action.memberCreator.fullName)
-				.appendTo($detailHeader);
+				.text('Created by ' + action.memberCreator.fullName)
+				.appendTo('.main-panel .panel-footer');
 
+				var date = new Date(action.date);
 				$("<span>")
 				.addClass("cardDate")
-				.text('Created on - ' + action.date)
-				.appendTo($detailHeader);
+				.text(' on ' + date.toLocaleDateString() + ' at ' + date.toLocaleTimeString())
+				.appendTo('.main-panel .panel-footer');
 			}
 
 			if (action.type == "commentCard") {
+				
 				var $comment = $("<div>")
-				.addClass("comment")
+				.addClass("panel").addClass("panel-default").addClass("comment-panel")
 				.appendTo($comments);
+				
+				var commentnobrs = $("<div>")
+				.addClass("commentText")
+				.addClass('panel-body')
+				.text(action.data.text)
+				.appendTo($comment);
+				
+				$comment_footer = $("<div>")
+				.addClass("panel-footer")
+				.appendTo($comment);
 					
 				$("<span>")
 				.addClass("commentUser")
 				.text(action.memberCreator.fullName)
-				.appendTo($comment);
-
+				.appendTo($comment_footer);
+				
+				var date = new Date(action.date);
 				$("<span>")
 				.addClass("commentDate")
-				.text(action.date)
-				.appendTo($comment);
-
-			 	var commentnobrs = $("<span>")
-				.addClass("commentText")
-				.text(action.data.text)
-				.appendTo($comment);
+				.text(' on ' + date.toLocaleDateString() + ' at ' + date.toLocaleTimeString())
+				.appendTo($comment_footer);
 				
 				var brs = $(commentnobrs).html().replace(/\n/g,"<br>");
 				$(commentnobrs).html(brs)

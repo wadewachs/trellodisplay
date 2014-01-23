@@ -12,3 +12,20 @@
 .date {
   width: 14em;
 }
+
+.main-panel p {
+  display: inline;
+  padding: 12px;
+}
+
+.cardChecklists {
+  max-width: 40%;
+}
+
+.checklistItem span {
+  margin-right: 5px;
+}
+
+.text-muted {
+  text-decoration: line-through;
+}
