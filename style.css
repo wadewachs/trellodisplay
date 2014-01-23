@@ -1,125 +1,31 @@
-body {
-    font-family: arial;
-    font-size: 12px;
+.quickForm {
+  display: inline-block;
+  width: 20em;
+  float: right;
+  margin: 8px 0 0 8px;
 }
 
-#loggedout {
-    text-align: center;
-    font-size: 20px;
-    padding-top: 30px;
-}
-#loggedin { 
-    display: none; 
+.title {
+  min-width: 9em;
 }
 
-#header {
-    padding: 4px;
-    border-bottom: 1px solid #000;
-    background: #eee;
+.date {
+  width: 14em;
 }
 
-#quickCard {
-	display:block;
-	width: 250px;
-	float: right;
+.main-panel p {
+  display: inline;
+  padding: 12px;
 }
 
-#quickSearch {
-	display:block;
-	width: 250px;
-	float:right;
+.cardChecklists {
+  max-width: 40%;
 }
 
-#output {
-    padding: 4px;
-	width:90%;
-	margin:auto;
-	background: #f0f0f0;
+.checklistItem span {
+  margin-right: 5px;
 }
 
-.strikethrough {
-	text-decoration:line-through;
-}
-
-/*
-Begin Card Details css
-*/
-.cardBoard {
-	display:block;
-	clear:both;
-}
-
-.cardList {
-	display:block;
-	clear:both;
-}
-
-
-.cardCreator {
-	display: block;
-	clear: both;
-	font-weight:bold;
-	float:top;
-}
-
-
-.cardDate {
-	display: block;
-	clear: both;
-	padding-bottom: 15px;
-}
-
-
-.cardComments {
-	border:1px solid;
-}
-
-.comment {
-	border-bottom: 1px dotted;
-}
-
-.commentUser {
-	font-weight: bold;
-}
-
-.commentDate {
-	font-weight: italic;
-	display:block;
-	clear:both;
-}
-
-.commentText {
-
-}
-
-
-
-/*
-End Card Details css
-*/
-table,td,th {
-	border: 1px solid black;
-	padding: 4px;
-}
-
-tr:nth-child(2n+1) {
-  background-color: #eeffee;
-}
-
-.cards {
-    padding: 8px;
-}
-
-.card { 
-    display: block; 
-    padding: 2px;
-}
-
-.boards {
-    padding: 8px;
-}
-
-.board {
-    display: block;
-    padding: 4px;
+.text-muted {
+  text-decoration: line-through;
 }
