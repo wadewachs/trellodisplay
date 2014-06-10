@@ -49,7 +49,7 @@ var addSubscribeLink = function(modelId, desc) {
 	.appendTo("#formBar");
 	
 	$('<span class="input-group-btn"><button class="btn btn-default">Subscribe</button></span>')
-	.click(function() {subscribe(modelId, desc, $("#emailId").val())})
+	.click(function(event) {event.preventDefault(); subscribe(modelId, desc, $("#emailId").val())})
 	.appendTo("#subscribeLink");
 };
 
