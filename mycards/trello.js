@@ -38,7 +38,7 @@ var printMyCards = function() {
 		var $trelloCardUrl = "https://www.trello.com/c/";
 
 		$.each(cards.actions, function(ix, action) {
-			var $cardUrl = $trelloCardUrl.concat(action.data.card.shortLink);
+			var $cardUrl = $trelloCardUrl.concat(action.data.card.id);
 			$("<a>")
 			.attr({href: $cardUrl, target: "trello"})
 			.addClass("card")
