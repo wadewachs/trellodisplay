@@ -19,7 +19,8 @@
 }
 
 .cardChecklists {
-  max-width: 40%;
+  max-width: 90%;
+  margin:auto;
 }
 
 .checklistItem span {

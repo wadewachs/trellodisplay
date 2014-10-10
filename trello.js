@@ -235,6 +235,11 @@ var displayCard = function(cardId) {
 	.addClass("cardDetails")
 	.appendTo("#output");
 
+var converter = new Showdown.converter();
+
+console.log(converter.makeHtml('#hello markdown!'));
+
+
 
 	Trello.cards.get(cardId,{board:"true",list:"true",checklists: "all",actions: "commentCard,createCard", action_memberCreator_fields : "fullName"}, function(cards) {
 		$details.empty()
@@ -286,7 +291,7 @@ var displayCard = function(cardId) {
 		.appendTo(".main-panel .panel-heading");
 
 		$("<div>")
-		.text(cards.desc)
+		.html(converter.makeHtml(cards.desc))
 		.attr("id", "cardDesc")
 		.addClass("lead").addClass('panel-body')
 		.appendTo(".main-panel");
@@ -326,7 +331,7 @@ var displayCard = function(cardId) {
 				var $item = $("<div>")
 				.addClass("checklistItem").addClass('list-group-item')
 				.append("<span class='glyphicon glyphicon-unchecked'></span>")
-				.append("<span class='name'>" + item.name + "</span>")
+				.append("<span class='name'>" + converter.makeHtml(item.name) + "</span>")
 				.appendTo($items);
 
 				if (item.state == "complete") {
@@ -363,7 +368,7 @@ var displayCard = function(cardId) {
 				var commentnobrs = $("<div>")
 				.addClass("commentText")
 				.addClass('panel-body')
-				.text(action.data.text)
+				.html(converter.makeHtml(action.data.text))
 				.appendTo($comment);
 				
 				$comment_footer = $("<div>")
