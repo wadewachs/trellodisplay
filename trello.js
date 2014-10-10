@@ -28,9 +28,6 @@ var onAuthorize = function() {
 		unsubscribe($_GET["deletewebhookid"]);
 	}
 
-	if ($_GET["fixlinks"]) {
-		fixSnapshotLinks($_GET["fixlinks"]);
-	}
 	
 
 };
@@ -170,8 +167,6 @@ var displayResultsBoard = function(board) {
 			$('.table').append(row);
 	};
 };
-
-
 
 
 var listBoards = function() {
