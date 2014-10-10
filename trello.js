@@ -8,7 +8,7 @@ var onAuthorize = function() {
 
 	buildHeader();
 	
-	if (!$_GET["s"] & !$_GET["c"] & !$_GET["b"] & !$_GET["deletewebhookid"] & !$_GET["fixlinks"]) {
+	if (!$_GET["s"] & !$_GET["c"] & !$_GET["b"] & !$_GET["deletewebhookid"]) {
 		listBoards();
 	}
 	
@@ -152,21 +152,6 @@ var displayCards = function(board) {
 			$('.table').append(row);
 	};
 };
-
-
-var fixSnapshotLinks = function(cardId) {
-	alert("You found me!!" + cardId);
-	
-	Trello.cards.get(cardId, {checklists: "all", fields: "checklists"}, function(results) {
-		for (var i=0; i<results.checklists.length; i++) {
-			for (var j=0; j<results.checklists[i].checkitems.length; j++) {
-				console.log(results.checklists[i].checkitems[j].name);
-			}
-		} 
-	}); 
-}
-
-
 
 
 
