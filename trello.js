@@ -8,10 +8,14 @@ var onAuthorize = function() {
 
 	buildHeader();
 	
-	if (!$_GET["s"] & !$_GET["c"] & !$_GET["b"] & !$_GET["deletewebhookid"]) {
+	if (!$_GET["l"] & !$_GET["s"] & !$_GET["c"] & !$_GET["b"] & !$_GET["deletewebhookid"]) {
 		listBoards();
 	}
 	
+	if ($_GET["l"]) {
+		displayList($_GET["l"]);
+	}
+
 	if ($_GET["s"]) {
 		displaySearch($_GET["s"]);
 	}
@@ -105,6 +109,25 @@ var displayBoard = function(boardId) {
 };
 
 
+
+
+var displayList = function(listId) {
+	var $cards = $("<div>")
+	.text("Loading Cards...")
+	.addClass("cards")
+	.appendTo("#output");
+
+	
+	Trello.lists.get(listId,{cards:"open"}, function(results) {
+		//console.log(lists);
+		addSubscribeLink(listId, "List Name - " + results.name);
+		displayListCards(results);
+	});
+};
+
+
+
+
 var displayResults = function(results) {
 	$("#output").empty();
 	$('#output').append("<h1>Search Results</h1>");
@@ -127,6 +150,29 @@ var displayResults = function(results) {
 };
 
 
+
+
+var displayListCards = function(list) {
+	$("#output").empty();
+	$('#output').append("<h1>" + list.name  + "</h1>");
+	$('#output').append("<table class='table table-striped table-bordered'><thead><tr><th>Card Title</th><th>Date Updated</th></tr></thead></table>");
+
+	var cardCount = list.cards.length;
+	for (var i=0; i<cardCount; i++) {
+		//console.log(results.cards[i]);
+		var c = list.cards[i];
+			var row = "<tr>";
+			row = row + "<td class='title'><a href='/?c=" + c.id + "'>" + c.name + "</a></td>";
+			var date = new Date(c.dateLastActivity);
+			row = row + "<td class='date'>" + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + "</td>";
+			row = row + "</tr>";
+			$('.table').append(row);
+	};
+};
+
+
+
+
 var displayCards = function(board) {
 	$("#output").empty();
 	$('#output').append("<h1>" + board.name  + "</h1>");
@@ -142,7 +188,7 @@ var displayCards = function(board) {
 		var c = board.cards[i];
 			var row = "<tr>";
 			row = row + "<td class='title'><a href='/?c=" + c.id + "'>" + c.name + "</a></td>";
-			row = row + "<td>" + lists[c.idList] + "</td>";
+			row = row + "<td><a href='/?l=" + c.idList + "'>" + lists[c.idList] + "</a></td>";
 			var date = new Date(c.dateLastActivity);
 			row = row + "<td class='date'>" + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + "</td>";
 			row = row + "</tr>";
@@ -223,7 +269,13 @@ var displayCard = function(cardId) {
 
 		$("<p>")
 		.addClass("cardList")
-		.text('List (status) - ' + cards.list.name)
+		.text('List (status) - ')
+		.appendTo(".main-panel .panel-heading");
+
+		$("<a>")
+		.addClass("cardList")
+		.text(cards.list.name)
+		.attr('href', "/?l=" + cards.list.id)
 		.appendTo(".main-panel .panel-heading");
 		
 		$("<a>")
