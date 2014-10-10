@@ -1,0 +1,31 @@
+.quickForm {
+  display: inline-block;
+  width: 20em;
+  float: right;
+  margin: 8px 0 0 8px;
+}
+
+.title {
+  min-width: 9em;
+}
+
+.date {
+  width: 14em;
+}
+
+.main-panel p {
+  display: inline;
+  padding: 12px;
+}
+
+.cardChecklists {
+  max-width: 40%;
+}
+
+.checklistItem span {
+  margin-right: 5px;
+}
+
+.text-muted {
+  text-decoration: line-through;
+}

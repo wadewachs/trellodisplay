@@ -155,17 +155,28 @@ var displayCards = function(board) {
 
 
 var fixSnapshotLinks = function(cardId) {
-	alert("You found me!!" + cardId);
+	var cardToCheckItem = {};
+	var checkItemToList = {};
 	
 	Trello.cards.get(cardId, {checklists: "all", fields: "checklists"}, function(results) {
 		for (var i=0; i<results.checklists.length; i++) {
-			for (var j=0; j<results.checklists[i].checkitems.length; j++) {
-				console.log(results.checklists[i].checkitems[j].name);
+			for (var j=0; j<results.checklists[i].checkItems.length; j++) {
+				var checkitemCard = results.checklists[i].checkItems[j].name.substr(21,8);
+				cardToCheckItem[checkitemCard] = results.checklists[i].checkItems[j].id;
+				checkItemToList[results.checklists[i].checkItems[j].id] = results.checklists[i].id;
+
+				Trello.cards.get(checkitemCard, {fields: "name,shortUrl,shortLink"}, function(results) {
+					var itemName = results.name + " [ [internal](https://trello.liquidweb.com/?c=" + results.id + ") ] [ [trello](" + results.shortUrl + ") ]"; 
+					var listitem = cardToCheckItem[results.shortLink];
+					var list = checkItemToList[listitem];
+					Trello.delete("checklists/" + list + "/checkItems/" + listitem, function () {
+						Trello.post("checklists/" + list + "/checkItems", {name: itemName});
+					});	
+				});
 			}
 		} 
 	}); 
 }
-
 
 
 
