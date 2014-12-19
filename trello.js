@@ -8,7 +8,7 @@ var onAuthorize = function() {
 
 	buildHeader();
 	
-	if (!$_GET["l"] & !$_GET["s"] & !$_GET["c"] & !$_GET["b"] & !$_GET["deletewebhookid"]) {
+	if (!$_GET["l"] & !$_GET["s"] & !$_GET["c"] & !$_GET["b"] & !$_GET["opm"]  & !$_GET["deletewebhookid"]) {
 		listBoards();
 	}
 	
@@ -26,6 +26,10 @@ var onAuthorize = function() {
 
 	if ($_GET["c"]) {
 		displayCard($_GET["c"]);
+	}
+	
+	if ($_GET["opm"]) {
+		getOPM($_GET["opm"]);
 	}
 	
 	if ($_GET["deletewebhookid"]) {
@@ -393,6 +397,64 @@ console.log(converter.makeHtml('#hello markdown!'));
 
 	});
 };
+
+
+function getOPM(opmCard) {
+
+
+	var opmList = "548082919b2a595cc8e43194"; //id of the snapshot list on the OPM board
+
+
+ 	if (opmCard == "current") {
+ 		Trello.lists.get(opmList, {cards:"open",card_fields:"name,pos"}, function (results) {
+			var firstCard = "";
+			var firstCardPos = 1600000; //arbitrarily large number
+			for (i=0;i<results.cards.length;i++) {
+				if (results.cards[i].pos <= firstCardPos) {
+					firstCardPos = results.cards[i].pos;
+					firstCard = results.cards[i].id;
+				}
+			}
+			displayOPM(firstCard);
+			//TODO implement function call to build the card list from an OPM card
+		});
+ 	}
+// 
+// 	Trello.cards.get(cardId,
+}
+
+function displayOPM(opmCard) {
+        $("#output").empty();
+        $('#output').append("<h1>OPM</h1>");
+        $('#output').append("<table class='table table-bordered'><thead><tr><th>Complete</th><th>Squad</th><th>Card Title</th><th>List (Status)</th><th>Board Name</th></tr></thead></table>");
+	Trello.cards.get(opmCard, {checklists:"all"}, function (results) { 
+		for (i=0;i<results.checklists.length;i++) {
+			for (j=0;j<results.checklists[i].checkItems.length;j++) {
+				var cardId = results.checklists[i].checkItems[j].name.substring(21,29);
+				var row = "<tr id='" + cardId + "' class='" + results.checklists[i].checkItems[j].state + "'>";
+				row = row + "<td>";
+				row = row + "<input type='checkbox' disabled class='opmstate " + results.checklists[i].checkItems[j].state + "'"
+				if (results.checklists[i].checkItems[j].state == "complete") {
+					row = row + "checked";
+				}
+				row = row+ "></td>";
+				row = row + "<td>" + results.checklists[i].name + "</td>";
+				row = row + "</tr>";
+				$('.table').append(row);
+				
+				Trello.cards.get(cardId, {fields:"shortLink,name",board:"true",board_fields:"name",list:"true",list_fields:"name"}, function(results) {
+					var row = "<td><a href='/?c=" + results.shortLink + "'>" + results.name + "</a></td>";
+					row = row + "<td>" + results.list.name + "</td>";
+					row = row + "<td>" + results.board.name + "</td";
+					$('#' + results.shortLink).append(row);
+				});
+			}
+		}
+	});
+}
+
+
+
 
 function getQueryParams(qs) {
 	qs = qs.split("+").join(" ");

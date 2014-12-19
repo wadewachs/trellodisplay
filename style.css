@@ -1,6 +1,6 @@
 .quickForm {
   display: inline-block;
-  width: 20em;
+  width: 15em;
   float: right;
   margin: 8px 0 0 8px;
 }
@@ -29,4 +29,17 @@
 
 .text-muted {
   text-decoration: line-through;
+}
+
+table .incomplete {
+  background-color:#FFEBEB;
+}
+
+table .complete {
+  background-color:#87FA89;
+}
+
+.opmstate[type="checkbox"] {
+  height:30px;
+  width:30px;
 }
