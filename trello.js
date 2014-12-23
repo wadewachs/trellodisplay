@@ -84,17 +84,8 @@ var displaySearch = function(query) {
 
 	//fetch the list of open boards, then only search for cards on those boards
 
-	Trello.get("organizations/lwrandd/boards/", {filter:"open", fields:"name"}, function(results) {
-		console.log(orgboardlist);
-		for(index = 0; index < results.length; ++index) {
-			orgboardlist =  orgboardlist +  results[index].id + ",";
-		}
-		orgboardlist = orgboardlist.slice(0,orgboardlist.length-1);
-		console.log(orgboardlist);
-	
-		Trello.get("search/",{query:query, idBoards:orgboardlist, boards_limit:"1000", cards_limit:"1000", card_list:"true", card_board:"true", partial:"true"}, function(results) {
-			displayResults(results);
-		});
+	Trello.get("search/",{query:query, boards_limit:"1000", cards_limit:"1000", card_list:"true", card_board:"true", partial:"true"}, function(results) {
+		displayResults(results);
 	});
 };
 
